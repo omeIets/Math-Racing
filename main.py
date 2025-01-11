@@ -2,11 +2,14 @@ import pygame
 from sys import exit # pesquisar função dessa biblioteca !!!
 
 pygame.init()  # inicia o pygame (ajuda a renderizar imagens, tocar sons, etc)
-screen = pygame.display.set_mode((1020, 580)) # definir hight and width
 pygame.display.set_caption('Math Racing')
 # pesquisar adicionar icon na janela !!!
+screen = pygame.display.set_mode((1020, 580)) # definir hight and width
+screen.fill ((44, 43, 43, 1))
+
 game_active = False
 
+# onde o jogo acontece
 while True:
 
     # checar todos os eventos
@@ -18,8 +21,10 @@ while True:
         if game_active:
             ##########
         else:
-            ##########
-
+            # reseta o jogo se apertar qualquer tecla apos endgame
+            if event.type == pygame.KEYDOWN:
+                game_active = True
+        
 
     if game_active:
         ###########
