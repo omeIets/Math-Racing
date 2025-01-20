@@ -4,15 +4,6 @@ from sys import exit  # pesquisar função dessa biblioteca !!!
 # funcao gerar pergunta e resposta
 
 # funcao calcular movimentaçao do carro
-# def movimentacao(segundos):
-
-# funcao cronometro
-# def cronometro(start_time):
-# current_time = int(pygame.time.get_ticks() / 1000) - start_time
-# score_surf = test_font.render(f'Score: {current_time}', False, 'White')
-# score_rect = score_surf.get_rect(center=(510, 50))
-# screen.blit(score_surf, score_rect)
-# return current_time
 
 pygame.init()  # inicia o pygame (ajuda a renderizar imagens, tocar sons, etc)
 pygame.display.set_caption('Math Racing')
@@ -54,21 +45,23 @@ txt_voltar_rect = txt_voltar.get_rect(center=(70, 40))
 
 
 carro1 = pygame.image.load('images/carro1.png').convert_alpha()
-carro1_rect = carro1.get_rect(midleft=(0, 290))
+carro1 = pygame.transform.rotozoom(carro1, 0, 0.3)
+carro1_rect = carro1.get_rect(midleft=(0, 420))
 carro2 = pygame.image.load('images/carro2.png').convert_alpha()
-carro2_rect = carro2.get_rect(midleft=(0, 350))
+carro2 = pygame.transform.rotozoom(carro2, 0, 0.3)
+carro2_rect = carro2.get_rect(midleft=(0, 500))
 
-input_rect = pygame.Rect(100, 100, 140, 32)
-input_color_inactive = pygame.Color('lightskyblue3')
-input_color_active = pygame.Color('dodgerblue2')
-input_color = input_color_inactive
-input_active = False
-text = ''
+# input_rect = pygame.Rect(100, 100, 140, 32)
+# input_color_inactive = pygame.Color('lightskyblue3')
+# input_color_active = pygame.Color('dodgerblue2')
+# input_color = input_color_inactive
+# input_active = False
+# text = ''
+test_font = pygame.font.Font(None, 50)
 
-game_mode = vencedor = 0
+game_mode = vencedor = tempo_inicial = 0
 fim = False
 clock = pygame.time.Clock()
-# start_time = 0
 
 # onde o jogo acontece
 while True:
@@ -79,9 +72,22 @@ while True:
             pygame.quit()  # pesuisar função certa !!!
             exit()  # uso do sys fecha todo codigo que tiver aberto, o código apenas acaba e fecha a janela
 
+        if game_mode == 0:  # tela inicial/final
+            screen.blit(carro_ferrari, carro_ferrari_rect)
+            # reseta o jogo se apertar qualquer tecla apos endgame
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
+                if infos_rect.collidepoint(mouse_pos):
+                    game_mode = 2
+            if event.type == pygame.KEYDOWN:
+                game_mode = 1
+                player = 1
+                fim = False
+                tempo_inicial = pygame.time.get_ticks()
+
         if game_mode == 1:  # jogo em si
             # pausar jogo com esc e calcular tempo jogo pausado
-            # mouse motion para instruções
 
             # Se o usuario apertou no input
             # if event.type == pygame.MOUSEBUTTONDOWN:
@@ -96,7 +102,14 @@ while True:
                 if event.type == pygame.KEYDOWN:
                     #     if input_active:
                     if event.key == pygame.K_RETURN:
+                        carro1_rect.left += 10 + \
+                            (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                        # da pra por movimentacao para baixo e la usa o timer
                         player = 2
+                        # comeca a contar o tempo do proximo player a partir do enter do anterior
+                        tempo_inicial = tempo_atual
+                        # conta a partir do frame anterior mas como a gente n vai usar muita precisao na mecanica de andar nao faz muita diferença
+
                         # ** Faz o carro andar, passa a vez pro outro, salva resposta e etc **
                         #             print(text)
                         #             text = ''
@@ -105,15 +118,16 @@ while True:
                         #         else:
                         #             text += event.unicode
 
-                        # carro1_rect.left += movimentacao(int(tempo_1/1000))
                         # tempo_2 = pygame.time.Clock()
 
             else:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        # carro2_rect.left += movimentacao(int(tempo_1/1000))
+                        carro2_rect.left += 10 + \
+                            (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
                         player = 1
-            ##########
+                        # comeca a contar o tempo do proximo player a partir do enter do anterior
+                        tempo_inicial = tempo_atual
 
         if game_mode == 2:  # tela instruções
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -121,25 +135,35 @@ while True:
                 # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
                 if txt_voltar_rect.collidepoint(mouse_pos):
                     game_mode = 0
-            ##########
-        else:  # tela inicial/final
-            screen.blit(carro_ferrari, carro_ferrari_rect)
-            # reseta o jogo se apertar qualquer tecla apos endgame
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
-                if infos_rect.collidepoint(mouse_pos):
-                    game_mode = 2
-            if event.type == pygame.KEYDOWN:
-                game_mode = 1
-                player = 1
-                fim = False
-            #     tempo_1 = pygame.time.Clock()
 
     if game_mode == 1:  # jogo em si
         fundo = pygame.Surface((900, 600))
-        fundo.fill('Yellow')
+        fundo.fill((44, 43, 43, 1))
         screen.blit(fundo, (0, 0))
+        screen.blit(carro1, carro1_rect)
+        screen.blit(carro2, carro2_rect)
+        # variaveis de tempo so existem durante game mode 1
+        tempo_atual = pygame.time.get_ticks()
+
+        # cronometro dos rounds
+        timer_round = 10 - ((tempo_atual - tempo_inicial) / 1000)
+
+        timer_surf = test_font.render(
+            f'{timer_round:.2f}', False, 'White')  # ---temporario------
+        if player == 1:
+            score_rect = timer_surf.get_rect(center=(190, 80))
+        else:
+            score_rect = timer_surf.get_rect(center=(710, 80))
+        # --------------------------------------
+        screen.blit(timer_surf, score_rect)
+
+        if timer_round <= 0:
+            if player == 1:
+                player = 2
+            else:
+                player = 1
+            # reseta tempos pois vai mudar round
+            tempo_inicial = tempo_atual = pygame.time.get_ticks()
 
         if not fim:
             if player == 1:
