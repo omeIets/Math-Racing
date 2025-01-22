@@ -66,7 +66,12 @@ txt_qualquerbotao_rect = txt_qualquerbotao.get_rect(center=(450, 510))
 txt_voltar = pygame.image.load('images/botao_voltar.png').convert_alpha()
 txt_voltar_rect = txt_voltar.get_rect(center=(70, 40))
 
+# Variáveis de controle de opacidade do txt_qualquerbotao
+opacity = 0
+fade_direction = 1  # 1 para aumentar opacidade, -1 para diminuir
+fade_speed = 3  # Velocidade de alteração da opacidade
 
+# Input
 # input_rect = pygame.Rect(100, 100, 140, 32)
 # input_color_inactive = pygame.Color('lightskyblue3')
 # input_color_active = pygame.Color('dodgerblue2')
@@ -265,6 +270,17 @@ while True:
             screen.blit(txt_qualquerbotao, txt_qualquerbotao_rect)
             screen.blit(infos, infos_rect)
             screen.blit(carro_ferrari, carro_ferrari_rect)
+
+            #231 Atualiza a opacidade do txt_qualquerbotao
+            opacity += fade_direction * fade_speed
+            if opacity >= 255:  # Inverte a direção ao atingir o máximo
+                opacity = 255
+                fade_direction = -1
+            elif opacity <= 0:  # Inverte a direção ao atingir o mínimo
+                opacity = 0
+                fade_direction = 1
+
+            txt_qualquerbotao.set_alpha(opacity)
 
 
     # atualiza tudo a cada frame
