@@ -1,6 +1,5 @@
 import pygame
 from sys import exit  # pesquisar função dessa biblioteca !!!
-
 # funcao gerar pergunta e resposta
 
 def tocar_audios():
@@ -66,18 +65,14 @@ txt_qualquerbotao_rect = txt_qualquerbotao.get_rect(center=(450, 510))
 txt_voltar = pygame.image.load('images/botao_voltar.png').convert_alpha()
 txt_voltar_rect = txt_voltar.get_rect(center=(70, 40))
 
-# Variáveis de controle de opacidade do txt_qualquerbotao
+# Texto Input
+text_p1 = ''
+text_p2 = ''
+
+# txt_qualquerbotao
 opacity = 0
 fade_direction = 1  # 1 para aumentar opacidade, -1 para diminuir
 fade_speed = 3  # Velocidade de alteração da opacidade
-
-# Input
-# input_rect = pygame.Rect(100, 100, 140, 32)
-# input_color_inactive = pygame.Color('lightskyblue3')
-# input_color_active = pygame.Color('dodgerblue2')
-# input_color = input_color_inactive
-# input_active = False
-# text = ''
 
 test_font = pygame.font.Font(None, 50)
 audio_tocando = 2
@@ -87,6 +82,7 @@ game_mode = vencedor = tempo_inicial = mexer = 0
 cenarios = int(round((900 / tam_cenario) + 1, 0))
 fim = False
 clock = pygame.time.Clock()
+contar_caracter = False
 
 # onde o jogo acontece
 while True:
@@ -98,6 +94,7 @@ while True:
             exit()  # uso do sys fecha todo codigo que tiver aberto, o código apenas acaba e fecha a janela
 
         if game_mode == 0:  # tela inicial/final
+            contar_caracter = False
             screen.blit(carro_ferrari, carro_ferrari_rect)
             # reseta o jogo se apertar qualquer tecla apos endgame
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -114,18 +111,9 @@ while True:
         if game_mode == 1:  # jogo em si
             # pausar jogo com esc e calcular tempo jogo pausado
 
-            # Se o usuario apertou no input
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-            #     if input_rect.collidepoint(event.pos):
-            #         input_active = not input_active
-            #     else:
-            #         input_active = False
-            #     input_color = input_color_active if input_active else input_color_inactive
-
             # # Salva cada tecla apertada
             if player == 1:
                 if event.type == pygame.KEYDOWN:
-                    #     if input_active:
                     if event.key == pygame.K_RETURN:
                         carro_vermelho_rect.left += 10 + \
                             (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
@@ -134,16 +122,15 @@ while True:
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
                         tempo_inicial = tempo_atual
                         # conta a partir do frame anterior mas como a gente n vai usar muita precisao na mecanica de andar nao faz muita diferença
-
-                        # ** Faz o carro andar, passa a vez pro outro, salva resposta e etc **
-                        #             print(text)
-                        #             text = ''
-                        #         elif event.key == pygame.K_BACKSPACE:
-                        #             text = text[:-1]
-                        #         else:
-                        #             text += event.unicode
-
+            
                         # tempo_2 = pygame.time.Clock()
+
+                        text_p1 = ''
+                    elif event.key == pygame.K_BACKSPACE:
+                        text_p1 = text_p1[:-1]
+                    elif contar_caracter: 
+                        text_p1 += event.unicode
+                    contar_caracter = True
 
             else:
                 if event.type == pygame.KEYDOWN:
@@ -153,6 +140,12 @@ while True:
                         player = 1
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
                         tempo_inicial = tempo_atual
+                        
+                        text_p2 = ''
+                    elif event.key == pygame.K_BACKSPACE:
+                        text_p2 = text_p2[:-1]
+                    else:
+                        text_p2 += event.unicode
 
         if game_mode == 2:  # tela instruções
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -171,8 +164,10 @@ while True:
         if timer_round <= 0: # quando zera gira os turnos
             if player == 1:
                 player = 2
+                text_p1 = ''
             else:
                 player = 1
+                text_p2 = ''
             # reseta tempos pois vai mudar round
             tempo_inicial = tempo_atual = pygame.time.get_ticks()
             
@@ -233,18 +228,11 @@ while True:
                 game_mode = 0
                 vencedor = 2
 
-
-        # RENDERIZANDO O INPUT
         # Render the current text.
-        # txt_surface = test_font.render(text, True, input_color)
-        # # Resize the box if the text is too long.
-        # width = max(200, txt_surface.get_width()+10)
-        # input_rect.w = width
-        # # Blit the text.
-        # screen.blit(txt_surface, (input_rect.x+5, input_rect.y+5))
-        # # Blit the input_box rect.
-        # pygame.draw.rect(screen, input_color, input_rect, 2)
-
+        txt_surface = test_font.render(text_p1, True, 'white')
+        screen.blit(txt_surface, (100, 200))
+        txt_surface = test_font.render(text_p2, True, 'white')
+        screen.blit(txt_surface, (570, 200))
 
     elif game_mode == 2:  # tela instruções
         fundo = pygame.Surface((900, 600))
