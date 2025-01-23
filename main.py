@@ -1,5 +1,7 @@
 import pygame
-from sys import exit  # pesquisar função dessa biblioteca !!!
+import random
+from sys import exit  
+
 # funcao gerar pergunta e resposta
 
 def tocar_audios():
@@ -8,13 +10,169 @@ def tocar_audios():
     '''
     if audio_tocando == 1:
         pygame.mixer.music.load('audios/audio_senna.mp3')
-    if audio_tocando == 2:
+    elif audio_tocando == 2:
         pygame.mixer.music.load('audios/musica_tema.mp3')
+    elif audio_tocando == 3:
+        pygame.mixer.music.load('audios/radio.mp3')
+    elif audio_tocando == 4:
+        pygame.mixer.music.load('audios/acerto.mp3')
+    elif audio_tocando == 5:
+        pygame.mixer.music.load('audios/erro.mp3')
     pygame.mixer.music.play()
+
+def definir_numeros():
+    numeros = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+    raiz_numeros = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    indice_numero_com_raiz = random.randint(0, 9)
+    numero_que_e_raiz = numeros[indice_numero_com_raiz]
+    raiz_numero = raiz_numeros[indice_numero_com_raiz]
+    vai_ter_raiz = random.randint(0, 1)
+
+    if vai_ter_raiz == 1:
+        xcx = random.randint(1, 3)  # random qual número que vai ter raiz
+        if xcx == 1:
+            num1 = numero_que_e_raiz
+            num2 = random.randint(1, 10)
+            num3 = random.randint(1, 10)
+        elif xcx == 2:
+            num1 = random.randint(1, 10)
+            num2 = numero_que_e_raiz
+            num3 = random.randint(1, 10)
+        else:
+            num1 = random.randint(1, 10)
+            num2 = random.randint(1, 10)
+            num3 = numero_que_e_raiz
+    else:
+        num1 = random.randint(1, 10)
+        num2 = random.randint(1, 10)
+        num3 = random.randint(1, 10)
+        xcx = raiz_numero = 0
+    return num1, num2, num3, vai_ter_raiz, xcx, raiz_numero
+
+
+def gerar_resultado():
+    # escolha das operações
+    # operações: 1=+ 2=- 3=* 4=/
+    # escolha numeros
+    # verifica se as operacoes de divisao sao possiveis ou entao redefine numeros
+    # realiza a conta
+    # retorna resposta e um monte de coisa
+
+    operacao1 = random.randint(1, 4)
+    operacao2 = random.randint(1, 4)
+    num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
+
+    # substituir numero que tem raiz pelo valor da sua raiz
+    if numero_com_raiz == 1:
+        temp = num1  # guarda numero original
+        num1 = raiz_do_numero
+    elif numero_com_raiz == 2:
+        temp = num2
+        num2 = raiz_do_numero
+    elif numero_com_raiz == 3:
+        temp = num3
+        num3 = raiz_do_numero
+
+    # evita contas com divisao sem ser exata
+    recalcular_raiz = False
+    if operacao1 == 4 and operacao2 == 4:
+        while num1 % num2 != 0 or (num1 / num2) % num3 != 0:
+            num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
+            recalcular_raiz = True
+    elif operacao1 == 4:
+        while num1 % num2 != 0:
+            num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
+            recalcular_raiz = True
+    elif operacao2 == 4:
+        while num2 % num3 != 0:
+            num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
+            recalcular_raiz = True
+
+    if recalcular_raiz:
+        # se precisou substituir numeros
+        if numero_com_raiz == 1:
+            temp = num1  # guarda numero original
+            num1 = raiz_do_numero
+        elif numero_com_raiz == 2:
+            temp = num2
+            num2 = raiz_do_numero
+        elif numero_com_raiz == 3:
+            temp = num3
+            num3 = raiz_do_numero
+    # soma
+    if operacao1 == 1:
+        if operacao1 == 1 and operacao2 == 1:
+            # tudo soma
+            resp = num1+num2+num3
+        elif operacao1 == 1 and operacao2 == 2:
+            resp = num1+num2-num3
+        elif operacao1 == 1 and operacao2 == 3:
+            resp = num1+(num2*num3)
+        elif operacao1 == 1 and operacao2 == 4:
+            resp = int(num1+(num2/num3))
+    # sub
+    elif operacao1 == 2:
+        if operacao1 == 2 and operacao2 == 1:
+            # tudo soma
+            resp = num1-num2+num3
+        elif operacao1 == 2 and operacao2 == 2:
+            resp = num1-num2-num3
+        elif operacao1 == 2 and operacao2 == 3:
+            resp = num1-(num2*num3)
+        elif operacao1 == 2 and operacao2 == 4:
+            resp = int(num1-(num2/num3))
+    # mult
+    elif operacao1 == 3:
+        if operacao1 == 3 and operacao2 == 1:
+            resp = (num1*num2)+num3
+        elif operacao1 == 3 and operacao2 == 2:
+            resp = (num1*num2)-num3
+        elif operacao1 == 3 and operacao2 == 3:
+            resp = num1*num2*num3
+        elif operacao1 == 3 and operacao2 == 4:
+            resp = int(num1*(num2/num3))
+    # div
+    elif operacao1 == 4:
+        if operacao1 == 4 and operacao2 == 1:
+            resp = int((num1/num2)+num3)
+        elif operacao1 == 4 and operacao2 == 2:
+            resp = int((num1/num2)-num3)
+        elif operacao1 == 4 and operacao2 == 3:
+            resp = int(num1/num2*num3)
+        elif operacao1 == 4 and operacao2 == 4:
+            resp = int(num1/num2/num3)
+
+    # retorna ao numero sem a raiz calculada
+    if numero_com_raiz == 1:
+        num1 = temp
+    elif numero_com_raiz == 2:
+        num2 = temp
+    elif numero_com_raiz == 3:
+        num3 = temp
+
+    return num1, num2, num3, resp, operacao1, operacao2, tem_raiz, numero_com_raiz
+
+
+def gerar_equacao():
+    num1, num2, num3, resp, operacao1, operacao2, raiz, num_raiz = gerar_resultado()
+    sinais = ['+', '-', '*', '/']
+
+    if raiz:
+        if num_raiz == 1:
+            conta = f'√{num1} {sinais[operacao1 -1]} {num2} {sinais[operacao2 - 1]} {num3}'
+        elif num_raiz == 2:
+            conta = f'{num1} {sinais[operacao1 -1]} √{num2} {sinais[operacao2 - 1]} {num3}'
+        else:
+            conta = f'{num1} {sinais[operacao1 -1]} {num2} {sinais[operacao2 - 1]} √{num3}'
+    else:
+        conta = f'{num1} {sinais[operacao1 -1]} {num2} {sinais[operacao2 - 1]} {num3}'
+
+    return conta, str(resp)
 
 pygame.init()  # inicia o pygame (ajuda a renderizar imagens, tocar sons, etc)
 pygame.display.set_caption('Math Racing')
-# pygame.display.set_icon()
+icon = pygame.image.load('images/icon.png')
+pygame.display.set_icon(icon)
 screen = pygame.display.set_mode((900, 600))
 screen.fill((44, 43, 43, 1))
 
@@ -101,33 +259,42 @@ while True:
                 mouse_pos = pygame.mouse.get_pos()
                 # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
                 if infos_rect.collidepoint(mouse_pos):
+                    audio_tocando = 3
+                    tocar_audios()
                     game_mode = 2
             if event.type == pygame.KEYDOWN:
                 game_mode = 1
                 player = 1
                 fim = False
+                gerar_conta = True # gera conta para o primeiro player do primeiro round
                 tempo_inicial = pygame.time.get_ticks()
 
         if game_mode == 1:  # jogo em si
-            # pausar jogo com esc e calcular tempo jogo pausado
 
             # # Salva cada tecla apertada
             if player == 1:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        carro_vermelho_rect.left += 10 + \
-                            (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
-                        # da pra por movimentacao para baixo e la usa o timer
+                        if text_p1 == resp:
+                            carro_vermelho_rect.left += 10 + \
+                                (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                            audio_tocando = 4
+                            tocar_audios()
+                        else:
+                            audio_tocando = 5
+                            tocar_audios()
+            
                         player = 2
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
                         tempo_inicial = tempo_atual
                         # conta a partir do frame anterior mas como a gente n vai usar muita precisao na mecanica de andar nao faz muita diferença
-            
-                        # tempo_2 = pygame.time.Clock()
+                        gerar_conta = True # muda round entao precisa gerar outra conta
 
                         text_p1 = ''
+                    
                     elif event.key == pygame.K_BACKSPACE:
                         text_p1 = text_p1[:-1]
+                    
                     elif contar_caracter: 
                         text_p1 += event.unicode
                     contar_caracter = True
@@ -135,13 +302,20 @@ while True:
             else:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
-                        carro_azul_rect.left += 10 + \
-                            (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                        if text_p2 == resp:
+                            carro_azul_rect.left += 10 + (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                            audio_tocando = 4
+                            tocar_audios()
+                        else:
+                            audio_tocando = 5
+                            tocar_audios()
                         player = 1
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
                         tempo_inicial = tempo_atual
+                        gerar_conta = True # muda round entao precisa gerar outra conta
                         
                         text_p2 = ''
+                        
                     elif event.key == pygame.K_BACKSPACE:
                         text_p2 = text_p2[:-1]
                     else:
@@ -172,16 +346,20 @@ while True:
             tempo_inicial = tempo_atual = pygame.time.get_ticks()
             
         # rounds
+        if gerar_conta:
+            equacao, resp = gerar_equacao()
+            gerar_conta = False
+        equacao_surface = test_font.render(f'{equacao}', True, 'white')
+
         if player == 1:
             screen.blit(fundo_player1, (0, 0))
             screen.blit(seta_esquerda, seta_esquerda_rect)
-            # chama funcao contas
-            # blit contas e etc
+            equacao_rect = equacao_surface.get_rect(center = (214,160)) # define em que lado da tela vai blitar a conta
         else:
             screen.blit(fundo_player2, (0, 0))
             screen.blit(seta_direita, seta_direita_rect)
-            # chama funcao contas
-            # blit contas e etc
+            equacao_rect = equacao_surface.get_rect(center = (687,160))
+
 
         # ---------------------temporario----------------------
         timer_surf = test_font.render( f'{timer_round:.2f}', False, 'White')  
@@ -195,7 +373,7 @@ while True:
         screen.blit(carro_azul, carro_azul_rect)
         screen.blit(carro_vermelho, carro_vermelho_rect)
         screen.blit(timer_surf, score_rect)
-            
+        screen.blit(equacao_surface,equacao_rect)
 
         #cenario se mexendo
         for i in range(0, cenarios):
@@ -274,4 +452,3 @@ while True:
     # atualiza tudo a cada frame
     pygame.display.update()  # atualiza o display constantemente
     clock.tick(60)  # entender como funciona esse forró
-    # tells that the while loop should not run faster than 60 times per second (prevents the game from running too fast)(max framerate)
