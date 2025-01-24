@@ -392,7 +392,8 @@ while True:
                 player = 1
                 text_p2 = ''
             # reseta tempos pois vai mudar round
-            tempo_inicial = tempo_atual = pygame.time.get_ticks()
+            tempo_inicial = tempo_atual = pygame.time.get_ticks()      
+            gerar_conta = True  # muda round entao precisa gerar outra conta
 
         # rounds
         if gerar_conta:
