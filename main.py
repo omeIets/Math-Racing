@@ -23,7 +23,6 @@ def tocar_audios(audio):
         pygame.mixer.music.set_volume(0.7)
     pygame.mixer.music.play()
 
-
 def definir_numeros():
     '''
     essa função gera os números que serão usados nas equações de cada round, retornando:
@@ -348,8 +347,8 @@ while True:
 
                         text_p1 = ''
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
-                        tempo_inicial = tempo_atual
                         pygame.time.wait(3000)
+                        tempo_inicial = tempo_atual + 3000
                         gerar_conta = True  # muda round entao precisa gerar outra conta
                         player = 2
                     elif event.key == pygame.K_BACKSPACE:
@@ -370,8 +369,8 @@ while True:
                             tocar_audios(5)
                         text_p2 = ''
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
-                        tempo_inicial = tempo_atual
                         pygame.time.wait(3000)
+                        tempo_inicial = tempo_atual + 3000
                         gerar_conta = True  # muda round entao precisa gerar outra conta
                         player = 1
 
