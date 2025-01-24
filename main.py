@@ -23,6 +23,7 @@ def tocar_audios(audio):
         pygame.mixer.music.set_volume(0.7)
     pygame.mixer.music.play()
 
+
 def definir_numeros():
     '''
     essa função gera os números que serão usados nas equações de cada round, retornando:
@@ -234,6 +235,11 @@ xadrez = pygame.transform.rotozoom(xadrez, 0, 0.65)
 infos = pygame.image.load('images/icone_informacoes.png').convert_alpha()
 infos = pygame.transform.rotozoom(infos, 0, 0.7)
 infos_rect = infos.get_rect(center=(800, 120))
+volume_on = pygame.image.load('images/volume_on.png').convert_alpha()
+volume_on = pygame.transform.rotozoom(volume_on, 0, 0.7)
+volume_off = pygame.image.load('images/volume_off.png').convert_alpha()
+volume_off = pygame.transform.rotozoom(volume_off, 0, 0.7)
+volume_rect = volume_on.get_rect(center=(750, 120))
 
 # jogo
 fundo_player1 = pygame.image.load('images/fundo_player1.png')
@@ -245,12 +251,6 @@ carro_azul_rect = carro_azul.get_rect(midleft=(5, 490))
 carro_vermelho = pygame.image.load('images/carro_vermelho.png').convert_alpha()
 carro_vermelho = pygame.transform.rotozoom(carro_vermelho, 0, 0.1)
 carro_vermelho_rect = carro_vermelho.get_rect(midleft=(5, 420))
-seta_esquerda = pygame.image.load('images/seta_esquerda.png').convert_alpha()
-seta_esquerda = pygame.transform.rotozoom(seta_esquerda, 0, 0.3)
-seta_esquerda_rect = seta_esquerda.get_rect(center=(450, 200))
-seta_direita = pygame.image.load('images/seta_direita.png').convert_alpha()
-seta_direita = pygame.transform.rotozoom(seta_direita, 0, 0.3)
-seta_direita_rect = seta_direita.get_rect(center=(450, 200))
 pista = pygame.image.load('images/pista.png').convert_alpha()
 cenario = pygame.image.load("images/vegetacao.png").convert_alpha()
 tam_cenario = cenario.get_width()
@@ -291,13 +291,13 @@ opacity = 0
 fade_direction = 1  # 1 para aumentar opacidade, -1 para diminuir
 fade_speed = 3  # Velocidade de alteração da opacidade
 
-font = pygame.font.Font("fontes/Formula1.otf", 30)
-font_contas = pygame.font.Font("fontes/fonte_contas.ttf", 30)
-# tocar_audios(2)
+font = pygame.font.Font("fontes/Formula1.ttf", 40)
+font_contas = pygame.font.Font("fontes/fonte_contas.ttf", 25)
+tocar_audios(2)
+sound = True
 
 game_mode = tempo_inicial = mexer = vencedor = 0
-cenarios = int(round((900 / tam_cenario) + 1, 0))
-fim = False
+cenarios = 2 # quantos cenarios precisa para preencher a tela + 1
 clock = pygame.time.Clock()
 contar_caracter = False
 
@@ -311,26 +311,30 @@ while True:
             exit()  # uso do sys fecha todo codigo que tiver aberto, o código apenas acaba e fecha a janela
 
         if game_mode == 0:  # tela inicial/final
-            contar_caracter = False
-            screen.blit(carro_ferrari, carro_ferrari_rect)
+            contar_caracter = False # evitar pegar tecla pressionada na tela inical/final no input
             # reseta o jogo se apertar qualquer tecla apos endgame
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
+                mouse_pos = pygame.mouse.get_pos() # pega x e y do ponteiro do mouse
                 # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
                 if infos_rect.collidepoint(mouse_pos):
                     tocar_audios(3)
                     game_mode = 2
+                if volume_rect.collidepoint(mouse_pos):
+                    if sound:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
+                    sound = not(sound)
             if event.type == pygame.KEYDOWN:
                 vencedor = 0
                 carro_azul_rect = carro_azul.get_rect(midleft=(5, 490))
-                carro_vermelho_rect = carro_vermelho.get_rect(midleft=(5, 420)) # reseta posicoes dos carros
-                game_mode = 1
-                player = 1
-                fim = False
+                carro_vermelho_rect = carro_vermelho.get_rect(midleft=(5, 420)) # reseta posicoes dos carros necessario para quando play again
+                player = random.randint(1,2)
                 gerar_conta = True  # gera conta para o primeiro player do primeiro round
-                tocou = False # tocar audio do vencedor so uma vez
+                tocou = False  # tocar audio do vencedor so uma vez
                 tempo_inicial = pygame.time.get_ticks()
                 pygame.mixer.music.stop()  # para de tocar a musica de fundo
+                game_mode = 1 # JH PAROU AQUI!!!!!!!!!
 
         if game_mode == 1:  # jogo em si
 
@@ -414,21 +418,18 @@ while True:
 
         if player == 1:
             screen.blit(fundo_player1, (0, 0))
-            screen.blit(seta_esquerda, seta_esquerda_rect)
             # define em que lado da tela vai blitar a conta
-            equacao_rect = equacao_surface.get_rect(center=(214, 160))
+            equacao_rect = equacao_surface.get_rect(center=(214, 165))
         else:
             screen.blit(fundo_player2, (0, 0))
-            screen.blit(seta_direita, seta_direita_rect)
-            equacao_rect = equacao_surface.get_rect(center=(687, 160))
+            equacao_rect = equacao_surface.get_rect(center=(687, 165))
 
-        # ---------------------temporario----------------------
         timer_surf = font.render(f'{timer_round:.2f}', False, 'White')
+        
         if player == 1:
             score_rect = timer_surf.get_rect(center=(214, 105))
         else:
             score_rect = timer_surf.get_rect(center=(687, 105))
-        # -----------------------------------------------------
 
         screen.blit(pista, (0, 0))
         screen.blit(carro_azul, carro_azul_rect)
@@ -437,8 +438,8 @@ while True:
         screen.blit(equacao_surface, equacao_rect)
 
         # cenario se mexendo
-        for i in range(0, cenarios):
-            screen.blit(cenario, (i * tam_cenario + mexer, 0))
+        screen.blit(cenario, (0 * tam_cenario + mexer, 0))
+        screen.blit(cenario, (1 * tam_cenario + mexer, 0))
         # variavel mexer
         mexer -= 5
         # resetando a imagem quando chega na borda
@@ -447,7 +448,7 @@ while True:
 
         # carros passando pela linha de chegada
         if carro_vermelho_rect.right > 840:  # se um dos carros passa o x da linha de chegada
-            if not tocou: # toca audio so uma vez
+            if not tocou:  # toca audio so uma vez
                 tocar_audios(1)
                 tocou = True
             screen.blit(chegada, (840, 395))  # aparece a linha de chegada
@@ -458,7 +459,7 @@ while True:
                 game_mode = 0
                 vencedor = 1
         elif carro_azul_rect.right > 840:
-            if not tocou: # toca audio so uma vez
+            if not tocou:  # toca audio so uma vez
                 tocar_audios(1)
                 tocou = True
             screen.blit(chegada, (840, 395))
@@ -485,23 +486,26 @@ while True:
         fundo = pygame.Surface((900, 600))
         fundo.fill((44, 43, 43, 1))
         screen.blit(fundo, (0, 0))
+        screen.blit(infos, infos_rect)
+        if sound:
+            screen.blit(volume_on, volume_rect)
+        else:
+            screen.blit(volume_off, volume_rect)
 
         # mostrar carro vencedor e tela jogar de novo
         if vencedor == 1:
             screen.blit(carro_ferrari, carro_ferrari_rect)
             screen.blit(xadrez, (0, 0))
-            screen.blit(infos, infos_rect)
             screen.blit(txt_vencedor_player1, txt_vencedor_player_rect)
             screen.blit(carro_ferrari, carro_ferrari_rect)
             screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
-            screen.blit (txt_fim_corrida, txt_fim_corrida_rect)
+            screen.blit(txt_fim_corrida, txt_fim_corrida_rect)
         elif vencedor == 2:
             screen.blit(xadrez, (0, 0))
-            screen.blit(infos, infos_rect)
             screen.blit(txt_vencedor_player2, txt_vencedor_player_rect)
             screen.blit(carro_williams, carro_williams_rect)
             screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
-            screen.blit (txt_fim_corrida, txt_fim_corrida_rect)
+            screen.blit(txt_fim_corrida, txt_fim_corrida_rect)
         else:
             screen.blit(txt_logo, txt_logo_rect)
             screen.blit(xadrez, (0, 0))
