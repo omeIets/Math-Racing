@@ -2,22 +2,23 @@ import pygame
 import random
 from sys import exit
 
-def tocar_audios():
+
+def tocar_audios(audio):
     '''
     essa função auxilia no gerenciamento dos diferentes audios do jogo a serem tocados
     '''
-    if audio_tocando == 1:
+    if audio == 1:
         pygame.mixer.music.load('audios/audio_senna.mp3')
         pygame.mixer.music.set_volume(0.7)
-    elif audio_tocando == 2:
+    elif audio == 2:
         pygame.mixer.music.load('audios/musica_tema.mp3')
         pygame.mixer.music.set_volume(0.7)
-    elif audio_tocando == 3:
+    elif audio == 3:
         pygame.mixer.music.load('audios/radio.mp3')
-    elif audio_tocando == 4:
+    elif audio == 4:
         pygame.mixer.music.load('audios/acerto.mp3')
         pygame.mixer.music.set_volume(0.7)
-    elif audio_tocando == 5:
+    elif audio == 5:
         pygame.mixer.music.load('audios/erro.mp3')
         pygame.mixer.music.set_volume(0.7)
     pygame.mixer.music.play()
@@ -226,8 +227,8 @@ carro_ferrari = pygame.image.load('images/carro_ferrari.png').convert_alpha()
 carro_ferrari = pygame.transform.rotozoom(carro_ferrari, 0, 0.65)
 carro_ferrari_rect = carro_ferrari.get_rect(center=(450, 340))
 carro_williams = pygame.image.load('images/carro_williams.png').convert_alpha()
-# nao fiz rect pq posicao é igual a da ferrari
-carro_williams = pygame.transform.rotozoom(carro_williams, 8, 1)
+carro_williams = pygame.transform.rotozoom(carro_williams, 0, 0.6)
+carro_williams_rect = carro_williams.get_rect(center=(450, 320))
 xadrez = pygame.image.load('images/xadrez.png').convert_alpha()
 # nao fiz rect pq vai ser sempre no 0,0
 xadrez = pygame.transform.rotozoom(xadrez, 0, 0.65)
@@ -266,6 +267,21 @@ txt_qualquerbotao = pygame.transform.rotozoom(txt_qualquerbotao, 0, 0.7)
 txt_qualquerbotao_rect = txt_qualquerbotao.get_rect(center=(450, 510))
 txt_voltar = pygame.image.load('images/botao_voltar.png').convert_alpha()
 txt_voltar_rect = txt_voltar.get_rect(center=(70, 40))
+txt_fim_corrida = pygame.image.load(
+    'images/txt_fim_corrida.png').convert_alpha()
+txt_fim_corrida = pygame.transform.rotozoom(txt_fim_corrida, 0, 0.7)
+txt_fim_corrida_rect = txt_fim_corrida.get_rect(center=(450, 50))
+txt_vencedor_player1 = pygame.image.load(
+    'images/txt_vencedor_player1.png').convert_alpha()
+txt_vencedor_player1 = pygame.transform.rotozoom(txt_vencedor_player1, 0, 0.6)
+txt_vencedor_player2 = pygame.image.load(
+    'images/txt_vencedor_player2.png').convert_alpha()
+txt_vencedor_player2 = pygame.transform.rotozoom(txt_vencedor_player2, 0, 0.6)
+txt_vencedor_player_rect = txt_vencedor_player1.get_rect(center=(450, 210))
+txt_jogar_novamente = pygame.image.load(
+    'images/txt_jogar_novamente.png').convert_alpha()
+txt_jogar_novamente = pygame.transform.rotozoom(txt_jogar_novamente, 0, 0.7)
+txt_jogar_novamente_rect = txt_jogar_novamente.get_rect(center=(450, 520))
 
 # Texto Input
 text_p1 = ''
@@ -276,11 +292,11 @@ opacity = 0
 fade_direction = 1  # 1 para aumentar opacidade, -1 para diminuir
 fade_speed = 3  # Velocidade de alteração da opacidade
 
-test_font = pygame.font.Font(None, 50)
-audio_tocando = 2
-tocar_audios()
+font = pygame.font.Font("fontes/Formula1.otf", 30)
+font_contas = pygame.font.Font("fontes/fonte_contas.ttf", 30)
+# tocar_audios(2)
 
-game_mode = vencedor = tempo_inicial = mexer = 0
+game_mode = tempo_inicial = mexer = vencedor = 0
 cenarios = int(round((900 / tam_cenario) + 1, 0))
 fim = False
 clock = pygame.time.Clock()
@@ -303,16 +319,19 @@ while True:
                 mouse_pos = pygame.mouse.get_pos()
                 # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
                 if infos_rect.collidepoint(mouse_pos):
-                    audio_tocando = 3
-                    tocar_audios()
+                    tocar_audios(3)
                     game_mode = 2
             if event.type == pygame.KEYDOWN:
+                vencedor = 0
+                carro_azul_rect = carro_azul.get_rect(midleft=(5, 490))
+                carro_vermelho_rect = carro_vermelho.get_rect(midleft=(5, 420)) # reseta posicoes dos carros
                 game_mode = 1
                 player = 1
                 fim = False
                 gerar_conta = True  # gera conta para o primeiro player do primeiro round
+                tocou = False # tocar audio do vencedor so uma vez
                 tempo_inicial = pygame.time.get_ticks()
-                pygame.mixer.music.stop() # para de tocar a musica de fundo
+                pygame.mixer.music.stop()  # para de tocar a musica de fundo
 
         if game_mode == 1:  # jogo em si
 
@@ -323,20 +342,16 @@ while True:
                         if text_p1 == resp:
                             carro_vermelho_rect.left += 30 + \
                                 (10 - ((tempo_atual - tempo_inicial) / 1000)) * 10
-                            audio_tocando = 4
-                            tocar_audios()
+                            tocar_audios(4)
                         else:
-                            audio_tocando = 5
-                            tocar_audios()
-
-                        player = 2
-                        # comeca a contar o tempo do proximo player a partir do enter do anterior
-                        tempo_inicial = tempo_atual
-                        # conta a partir do frame anterior mas como a gente n vai usar muita precisao na mecanica de andar nao faz muita diferença
-                        gerar_conta = True  # muda round entao precisa gerar outra conta
+                            tocar_audios(5)
 
                         text_p1 = ''
-
+                        # comeca a contar o tempo do proximo player a partir do enter do anterior
+                        tempo_inicial = tempo_atual
+                        pygame.time.wait(3000)
+                        gerar_conta = True  # muda round entao precisa gerar outra conta
+                        player = 2
                     elif event.key == pygame.K_BACKSPACE:
                         text_p1 = text_p1[:-1]
 
@@ -350,17 +365,15 @@ while True:
                         if text_p2 == resp:
                             carro_azul_rect.left += 30 + \
                                 (10 - ((tempo_atual - tempo_inicial) / 1000)) * 10
-                            audio_tocando = 4
-                            tocar_audios()
+                            tocar_audios(4)
                         else:
-                            audio_tocando = 5
-                            tocar_audios()
-                        player = 1
+                            tocar_audios(5)
+                        text_p2 = ''
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
                         tempo_inicial = tempo_atual
+                        pygame.time.wait(3000)
                         gerar_conta = True  # muda round entao precisa gerar outra conta
-
-                        text_p2 = ''
+                        player = 1
 
                     elif event.key == pygame.K_BACKSPACE:
                         text_p2 = text_p2[:-1]
@@ -372,8 +385,7 @@ while True:
                 mouse_pos = pygame.mouse.get_pos()
                 # se botao do mouse pressionado e a posicao colidir com o rect do botao de infos
                 if txt_voltar_rect.collidepoint(mouse_pos):
-                    audio_tocando = 2
-                    tocar_audios()
+                    tocar_audios(2)
                     game_mode = 0
 
     if game_mode == 1:  # jogo em si
@@ -393,12 +405,13 @@ while True:
                 text_p2 = ''
             # reseta tempos pois vai mudar round
             tempo_inicial = tempo_atual = pygame.time.get_ticks()
+            gerar_conta = True  # muda round entao precisa gerar outra conta
 
         # rounds
         if gerar_conta:
             equacao, resp = gerar_equacao()
             gerar_conta = False
-        equacao_surface = test_font.render(f'{equacao}', True, 'white')
+        equacao_surface = font_contas.render(f'{equacao}', True, 'white')
 
         if player == 1:
             screen.blit(fundo_player1, (0, 0))
@@ -411,7 +424,7 @@ while True:
             equacao_rect = equacao_surface.get_rect(center=(687, 160))
 
         # ---------------------temporario----------------------
-        timer_surf = test_font.render(f'{timer_round:.2f}', False, 'White')
+        timer_surf = font.render(f'{timer_round:.2f}', False, 'White')
         if player == 1:
             score_rect = timer_surf.get_rect(center=(214, 105))
         else:
@@ -435,9 +448,9 @@ while True:
 
         # carros passando pela linha de chegada
         if carro_vermelho_rect.right > 840:  # se um dos carros passa o x da linha de chegada
-            if audio_tocando != 1:  # toca audio so uma vez
-                audio_tocando = 1
-                tocar_audios()
+            if not tocou: # toca audio so uma vez
+                tocar_audios(1)
+                tocou = True
             screen.blit(chegada, (840, 395))  # aparece a linha de chegada
             # blit dnv para nao ficar por baixo da linha de chegada
             screen.blit(carro_vermelho, carro_vermelho_rect)
@@ -446,9 +459,9 @@ while True:
                 game_mode = 0
                 vencedor = 1
         elif carro_azul_rect.right > 840:
-            if audio_tocando != 1:
-                audio_tocando = 1
-                tocar_audios()
+            if not tocou: # toca audio so uma vez
+                tocar_audios(1)
+                tocou = True
             screen.blit(chegada, (840, 395))
             screen.blit(carro_azul, carro_azul_rect)
             carro_azul_rect.left += 3
@@ -457,9 +470,9 @@ while True:
                 vencedor = 2
 
         # Render the current text.
-        txt_surface = test_font.render(text_p1, True, 'white')
+        txt_surface = font.render(text_p1, True, 'white')
         screen.blit(txt_surface, (100, 200))
-        txt_surface = test_font.render(text_p2, True, 'white')
+        txt_surface = font.render(text_p2, True, 'white')
         screen.blit(txt_surface, (570, 200))
 
     elif game_mode == 2:  # tela instruções
@@ -477,8 +490,19 @@ while True:
         # mostrar carro vencedor e tela jogar de novo
         if vencedor == 1:
             screen.blit(carro_ferrari, carro_ferrari_rect)
+            screen.blit(xadrez, (0, 0))
+            screen.blit(infos, infos_rect)
+            screen.blit(txt_vencedor_player1, txt_vencedor_player_rect)
+            screen.blit(carro_ferrari, carro_ferrari_rect)
+            screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
+            screen.blit (txt_fim_corrida, txt_fim_corrida_rect)
         elif vencedor == 2:
-            screen.blit(carro_williams, carro_ferrari_rect)
+            screen.blit(xadrez, (0, 0))
+            screen.blit(infos, infos_rect)
+            screen.blit(txt_vencedor_player2, txt_vencedor_player_rect)
+            screen.blit(carro_williams, carro_williams_rect)
+            screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
+            screen.blit (txt_fim_corrida, txt_fim_corrida_rect)
         else:
             screen.blit(txt_logo, txt_logo_rect)
             screen.blit(xadrez, (0, 0))
@@ -486,16 +510,17 @@ while True:
             screen.blit(infos, infos_rect)
             screen.blit(carro_ferrari, carro_ferrari_rect)
 
-            # 231 Atualiza a opacidade do txt_qualquerbotao
-            opacity += fade_direction * fade_speed
-            if opacity >= 255:  # Inverte a direção ao atingir o máximo
-                opacity = 255
-                fade_direction = -1
-            elif opacity <= 0:  # Inverte a direção ao atingir o mínimo
-                opacity = 0
-                fade_direction = 1
+        # 231 Atualiza a opacidade do txt_qualquerbotao
+        opacity += fade_direction * fade_speed
+        if opacity >= 255:  # Inverte a direção ao atingir o máximo
+            opacity = 255
+            fade_direction = -1
+        elif opacity <= 0:  # Inverte a direção ao atingir o mínimo
+            opacity = 0
+            fade_direction = 1
 
-            txt_qualquerbotao.set_alpha(opacity)
+        txt_qualquerbotao.set_alpha(opacity)
+        txt_jogar_novamente.set_alpha(opacity)
 
     # atualiza tudo a cada frame
     pygame.display.update()  # atualiza o display constantemente
