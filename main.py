@@ -74,31 +74,43 @@ def gerar_resultado():
         num3 = raiz_do_numero
 
     # evita contas com divisao sem ser exata
-    recalcular_raiz = False
     if operacao1 == 4 and operacao2 == 4:
-        while num1 % num2 != 0 or (num1 / num2) % num3 != 0:
+        while num1 % num2 != 0 or (num1 / num2) % num3 != 0: # se alguma das operacoes nao da exata gera novos numeros
             num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
-            recalcular_raiz = True
+            if numero_com_raiz == 1: # substitui raizes de novos numeros gerados
+                temp = num1  
+                num1 = raiz_do_numero
+            elif numero_com_raiz == 2:
+                temp = num2
+                num2 = raiz_do_numero
+            elif numero_com_raiz == 3:
+                temp = num3
+                num3 = raiz_do_numero
     elif operacao1 == 4:
         while num1 % num2 != 0:
             num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
-            recalcular_raiz = True
+            if numero_com_raiz == 1:
+                temp = num1  
+                num1 = raiz_do_numero
+            elif numero_com_raiz == 2:
+                temp = num2
+                num2 = raiz_do_numero
+            elif numero_com_raiz == 3:
+                temp = num3
+                num3 = raiz_do_numero
     elif operacao2 == 4:
         while num2 % num3 != 0:
             num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
-            recalcular_raiz = True
+            if numero_com_raiz == 1:
+                temp = num1  
+                num1 = raiz_do_numero
+            elif numero_com_raiz == 2:
+                temp = num2
+                num2 = raiz_do_numero
+            elif numero_com_raiz == 3:
+                temp = num3
+                num3 = raiz_do_numero
 
-    if recalcular_raiz:
-        # se precisou substituir numeros
-        if numero_com_raiz == 1:
-            temp = num1  # guarda numero original
-            num1 = raiz_do_numero
-        elif numero_com_raiz == 2:
-            temp = num2
-            num2 = raiz_do_numero
-        elif numero_com_raiz == 3:
-            temp = num3
-            num3 = raiz_do_numero
     # soma
     if operacao1 == 1:
         if operacao1 == 1 and operacao2 == 1:
@@ -276,8 +288,8 @@ while True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if text_p1 == resp:
-                            carro_vermelho_rect.left += 10 + \
-                                (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                            carro_vermelho_rect.left += 30 + \
+                                (10 - ((tempo_atual - tempo_inicial) / 1000)) * 10
                             audio_tocando = 4
                             tocar_audios()
                         else:
@@ -303,7 +315,7 @@ while True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if text_p2 == resp:
-                            carro_azul_rect.left += 10 + (10 - ((tempo_atual - tempo_inicial) / 1000)) * 4
+                            carro_azul_rect.left += 30 + (10 - ((tempo_atual - tempo_inicial) / 1000)) * 10
                             audio_tocando = 4
                             tocar_audios()
                         else:
