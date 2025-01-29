@@ -241,6 +241,7 @@ volume_on = pygame.transform.rotozoom(volume_on, 0, 0.7)
 volume_off = pygame.image.load('images/volume_off.png').convert_alpha()
 volume_off = pygame.transform.rotozoom(volume_off, 0, 0.7)
 volume_rect = volume_on.get_rect(center=(750, 120))
+como_jogar = pygame.image.load('images/como_jogar.png')
 
 # jogo
 fundo_player1 = pygame.image.load('images/fundo_player1.png')
@@ -270,7 +271,7 @@ txt_qualquerbotao = pygame.image.load(
 txt_qualquerbotao = pygame.transform.rotozoom(txt_qualquerbotao, 0, 0.7)
 txt_qualquerbotao_rect = txt_qualquerbotao.get_rect(center=(450, 510))
 txt_voltar = pygame.image.load('images/botao_voltar.png').convert_alpha()
-txt_voltar_rect = txt_voltar.get_rect(center=(70, 40))
+txt_voltar_rect = txt_voltar.get_rect(center=(60, 30))
 txt_fim_corrida = pygame.image.load(
     'images/txt_fim_corrida.png').convert_alpha()
 txt_fim_corrida = pygame.transform.rotozoom(txt_fim_corrida, 0, 0.7)
@@ -500,9 +501,7 @@ while True:
                 tempo_inicial += 10000 # se por acaso timer durante animacao zerar add + 10segs e continua animacao no if
 
     elif game_mode == 2:  # tela instruções
-        fundo = pygame.Surface((900, 600))
-        fundo.fill('Blue')
-        screen.blit(fundo, (0, 0))
+        screen.blit(como_jogar,(0,0))
         screen.blit(txt_voltar, txt_voltar_rect)
 
     else:  # tela final/inicial
