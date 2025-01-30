@@ -1,5 +1,6 @@
 import pygame
 import random
+import os
 from sys import exit
 
 
@@ -219,7 +220,6 @@ icon = pygame.image.load('images/icon.png')
 pygame.display.set_icon(icon)
 screen = pygame.display.set_mode((900, 600))
 screen.fill((44, 43, 43, 1))
-arquivo = open("dados_partidas.txt","w")
 
 # surfaces e rects ////////////////////////////////////////////////
 
@@ -242,6 +242,9 @@ volume_off = pygame.image.load('images/volume_off.png').convert_alpha()
 volume_off = pygame.transform.rotozoom(volume_off, 0, 0.7)
 volume_rect = volume_on.get_rect(center=(750, 120))
 como_jogar = pygame.image.load('images/como_jogar.png')
+icon_relatorio = pygame.image.load('images/icon_envelope.png').convert_alpha()
+icon_relatorio = pygame.transform.rotozoom(icon_relatorio, 0, 0.07)
+icon_relatorio_rect = icon_relatorio.get_rect(center=(800,510))
 
 # jogo
 fundo_player1 = pygame.image.load('images/fundo_player1.png')
@@ -301,10 +304,12 @@ font_contas = pygame.font.Font("fontes/fonte_contas.ttf", 25)
 tocar_audios(2)
 sound = True
 
-game_mode = mexer = vencedor = partidas = 0
+game_mode = mexer = vencedor = partidas = resp = 0
+acertos_p1 = erros_p1 = acertos_p2 = erros_p2 = 0
 cenarios = 2 # quantos cenarios precisa para preencher a tela + 1
 clock = pygame.time.Clock()
 contar_caracter = tocou_senna = False
+arquivo = open("dados_partidas.txt","w")
 
 # onde o jogo acontece
 while True:
@@ -313,7 +318,6 @@ while True:
     for event in pygame.event.get():  # o metodo capta os eventos e o loop passa por todos eles
         if event.type == pygame.QUIT:  # o mesmo que clicar no botão de x
             pygame.quit() # estudar por que do uso dos dois
-            arquivo.close()
             exit()  # uso do sys fecha todo codigo que tiver aberto, o código apenas acaba e fecha a janela
 
         if game_mode == 0:  # tela inicial/final
@@ -325,12 +329,15 @@ while True:
                 if infos_rect.collidepoint(mouse_pos):
                     tocar_audios(3)
                     game_mode = 2
-                if volume_rect.collidepoint(mouse_pos):
+                elif volume_rect.collidepoint(mouse_pos):
                     if sound:
                         pygame.mixer.music.pause()
                     else:
                         pygame.mixer.music.unpause()
                     sound = not(sound)
+                elif icon_relatorio_rect.collidepoint(mouse_pos):
+                    if vencedor != 0: # se alguem ja tiver ganhado alguma partida
+                        os.startfile("dados_partidas.txt")
             if event.type == pygame.KEYDOWN:
                 vencedor = 0
                 carro_azul_rect = carro_azul.get_rect(midleft=(5, 490))
@@ -342,6 +349,7 @@ while True:
                 pygame.mixer.music.stop()  # para de tocar a musica de fundo
                 partidas += 1
                 game_mode = 1 
+                arquivo = open("dados_partidas.txt","w")
 
         if game_mode == 1:  # jogo em si
 
@@ -350,9 +358,11 @@ while True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN: # tecla enter 
                         if text_resposta == resp: # se acertou resposta
+                            acertos_p1 += 1
                             carro_vermelho_rect.left += 30 + timer_round * 12 # carro anda
                             tocar_audios(4) # audio acertou
                         else:
+                            erros_p1 += 1
                             tocar_audios(5) # audio errou
                         text_resposta = '' # limpa txt resposta para receber input prox jogador
                         if carro_vermelho_rect.right < 840 and carro_azul_rect.right < 840:
@@ -369,9 +379,11 @@ while True:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:
                         if text_resposta == resp:
+                            acertos_p2 += 1
                             carro_azul_rect.left += 30 + timer_round * 12
                             tocar_audios(4)
                         else:
+                            erros_p2 += 1
                             tocar_audios(5)
                         text_resposta = ''
                         # comeca a contar o tempo do proximo player a partir do enter do anterior
@@ -454,7 +466,6 @@ while True:
                 carro_vermelho_rect.left += 3  # vai andando o carro
                 if carro_vermelho_rect.left > 900:  # quando a bunda do carro passar dos 900 da tela muda o game mode
                     game_mode = 0
-                    arquivo.write(f'Partida n°{partidas} | Vencedor = Player 1')
             elif carro_azul_rect.right > 840:
                 vencedor = 2
                 if not tocou_senna:  # toca audio so uma vez
@@ -469,7 +480,6 @@ while True:
                 carro_azul_rect.left += 3
                 if carro_azul_rect.left > 900:
                     game_mode = 0
-                    arquivo.write(f'Partida n°{partidas} | Vencedor = Player 2')
         
         elif timer_round > 10: # 13 a 10.1 segundos que eh o tempo de intervalo entre rounds
             if player == 1: 
@@ -501,6 +511,10 @@ while True:
                 tempo_inicial += 10000 # se por acaso timer durante animacao zerar add + 10segs e continua animacao no if
 
     elif game_mode == 2:  # tela instruções
+        fundo = pygame.Surface((900, 600))
+        fundo.fill((44, 43, 43, 1))
+        screen.blit(fundo, (0, 0))
+        screen.blit(xadrez, (0, 0))
         screen.blit(como_jogar,(0,0))
         screen.blit(txt_voltar, txt_voltar_rect)
 
@@ -511,8 +525,13 @@ while True:
         screen.blit(infos, infos_rect)
 
         if tocou_senna:
-            sound = True
-            tocou_senna = False
+            sound = True # deixa icon como audio ligado dnv quando acaba partida pois roda audio senna
+            arquivo.write(f'Partida n°{partidas} | Vencedor = Jogador {vencedor}')
+            arquivo.write(f'\n-> Jogador 1: {acertos_p1} acertos | {erros_p1} erros')
+            arquivo.write(f'\n-> Jogador 2: {acertos_p2} acertos | {erros_p2} erros\n')
+            arquivo.close()
+            print(acertos_p1,erros_p1,acertos_p2,erros_p2)
+            tocou_senna = False # reseta para proxima partida
 
         if sound:
             screen.blit(volume_on, volume_rect)
@@ -527,12 +546,14 @@ while True:
             screen.blit(carro_ferrari, carro_ferrari_rect)
             screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
             screen.blit(txt_fim_corrida, txt_fim_corrida_rect)
+            screen.blit(icon_relatorio,icon_relatorio_rect)
         elif vencedor == 2:
             screen.blit(xadrez, (0, 0))
             screen.blit(txt_vencedor_player2, txt_vencedor_player_rect)
             screen.blit(carro_williams, carro_williams_rect)
             screen.blit(txt_jogar_novamente, txt_jogar_novamente_rect)
             screen.blit(txt_fim_corrida, txt_fim_corrida_rect)
+            screen.blit(icon_relatorio,icon_relatorio_rect)
         else:
             screen.blit(txt_logo, txt_logo_rect)
             screen.blit(xadrez, (0, 0))
