@@ -1,0 +1,3 @@
+Partida n°1 | Vencedor = Jogador 2
+-> Jogador 1: 6 acertos | 0 erros
+-> Jogador 2: 6 acertos | 1 erros
