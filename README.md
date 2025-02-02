@@ -41,8 +41,8 @@ O vencedor será o primeiro jogador cujo carro cruzar a linha de chegada.
 
 ## Como Jogar
 
-- **Teclas de controle**: pressione qualquer tecla para começar ou recomeçar a partida, durante o jogo escreva sua resposta numérica e aperte enter para registrá-la
-- **Objetivo**: acerte a resposta do maior número de equações no menor tempo possível para assim seu carro avançar mais, alcançando o fim da pista primeiro e vencer cruzando a linha de chega
+- **Teclas de controle**: pressione qualquer tecla para começar ou recomeçar a partida, durante o jogo escreva sua resposta numérica e aperte enter para registrá-la.
+- **Objetivo**: acerte a resposta do maior número de equações no menor tempo possível para assim seu carro avançar mais, alcançando o fim da pista primeiro e vencendo ao cruzar a linha de chega.
 
 ## Estrutura do Projeto
 
