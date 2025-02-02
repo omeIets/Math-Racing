@@ -50,10 +50,10 @@ O vencedor será o primeiro jogador cujo carro cruzar a linha de chegada.
 |-- audios/     # Pasta com os áudios utilizados
 |-- fontes/     # Pasta com as fontes utilizadas
 |-- images/  # Pasta contendo as imagens utilizadas
+|-- README.md  # Este arquivo
 |-- dados_partidas.txt  # Arquivo de texto que armazena resultados da partida
 |-- main_demo.py  # Versão alternativa do jogo que dura menos tempo
 |-- main.py  # Arquivo principal do jogo
-|-- README.md  # Este arquivo
 
 ```
 
