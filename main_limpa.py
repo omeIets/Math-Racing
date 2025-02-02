@@ -44,7 +44,7 @@ def definir_numeros():
     vai_ter_raiz = random.randint(0, 1)
 
     if vai_ter_raiz == 1:
-        xcx = random.randint(1, 3)  # random qual dos números que vai ter raiz
+        xcx = random.randint(1, 3)  
         if xcx == 1:
             num1 = numero_que_e_raiz
             num2 = random.randint(1, 10)
@@ -85,9 +85,8 @@ def gerar_resultado():
     operacao2 = random.randint(1, 4)
     num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
 
-    # substituir número que tem raiz pelo valor da sua raiz
     if numero_com_raiz == 1:
-        temp = num1  # guarda número original
+        temp = num1  
         num1 = raiz_do_numero
     elif numero_com_raiz == 2:
         temp = num2
@@ -96,12 +95,10 @@ def gerar_resultado():
         temp = num3
         num3 = raiz_do_numero
 
-    # evita contas com divisão sem ser exata
-    # se alguma das operações nao der exata gera novos números
     if operacao1 == 4 and operacao2 == 4:
         while num1 % num2 != 0 or (num1 / num2) % num3 != 0:
             num1, num2, num3, tem_raiz, numero_com_raiz, raiz_do_numero = definir_numeros()
-            if numero_com_raiz == 1:  # substitui raizes de novos números gerados
+            if numero_com_raiz == 1:
                 temp = num1
                 num1 = raiz_do_numero
             elif numero_com_raiz == 2:
@@ -135,9 +132,9 @@ def gerar_resultado():
                 temp = num3
                 num3 = raiz_do_numero
 
-    # soma
     if operacao1 == 1:
         if operacao1 == 1 and operacao2 == 1:
+            # tudo soma
             resp = num1+num2+num3
         elif operacao1 == 1 and operacao2 == 2:
             resp = num1+num2-num3
@@ -145,7 +142,7 @@ def gerar_resultado():
             resp = num1+(num2*num3)
         elif operacao1 == 1 and operacao2 == 4:
             resp = int(num1+(num2/num3))
-    # sub
+
     elif operacao1 == 2:
         if operacao1 == 2 and operacao2 == 1:
             # tudo soma
@@ -155,8 +152,8 @@ def gerar_resultado():
         elif operacao1 == 2 and operacao2 == 3:
             resp = num1-(num2*num3)
         elif operacao1 == 2 and operacao2 == 4:
-            resp = num1-(num2/num3)
-    # mult
+            resp = int(num1-(num2/num3))
+
     elif operacao1 == 3:
         if operacao1 == 3 and operacao2 == 1:
             resp = (num1*num2)+num3
@@ -165,19 +162,18 @@ def gerar_resultado():
         elif operacao1 == 3 and operacao2 == 3:
             resp = num1*num2*num3
         elif operacao1 == 3 and operacao2 == 4:
-            resp = num1*(num2/num3)
-    # div
-    else:
-        if operacao1 == 4 and operacao2 == 1:
-            resp = (num1/num2)+num3
-        elif operacao1 == 4 and operacao2 == 2:
-            resp = (num1/num2)-num3
-        elif operacao1 == 4 and operacao2 == 3:
-            resp = num1/num2*num3
-        elif operacao1 == 4 and operacao2 == 4:
-            resp = num1/num2/num3
+            resp = int(num1*(num2/num3))
 
-    # retorna ao número sem a raiz calculada
+    elif operacao1 == 4:
+        if operacao1 == 4 and operacao2 == 1:
+            resp = int((num1/num2)+num3)
+        elif operacao1 == 4 and operacao2 == 2:
+            resp = int((num1/num2)-num3)
+        elif operacao1 == 4 and operacao2 == 3:
+            resp = int(num1/num2*num3)
+        elif operacao1 == 4 and operacao2 == 4:
+            resp = int(num1/num2/num3)
+
     if numero_com_raiz == 1:
         num1 = temp
     elif numero_com_raiz == 2:
@@ -194,7 +190,7 @@ def gerar_equacao():
     ela retornará:
 
     conta(str) -> a equação formatada na forma de string
-    resp(str) -> a resposta da equação na forma de string, a fim de ser comparada com o input(str)
+    resp(str) -> a resposta da equação na fomra de string, a fim de ser comparada com o input(str)
                 do jogador no decorrer do jogo
     '''
     num1, num2, num3, resp, operacao1, operacao2, raiz, num_raiz = gerar_resultado()
@@ -213,16 +209,13 @@ def gerar_equacao():
     return conta, str(resp)
 
 
-pygame.init()  
+pygame.init() 
 pygame.display.set_caption('Math Racing')
 icon = pygame.image.load('images/icon.png')
 pygame.display.set_icon(icon)
 screen = pygame.display.set_mode((900, 600))
 screen.fill((44, 43, 43, 1))
 
-# surfaces e rects 
-
-# tela inicial
 carro_ferrari = pygame.image.load('images/carro_ferrari.png').convert_alpha()
 carro_ferrari = pygame.transform.rotozoom(carro_ferrari, 0, 0.65)
 carro_ferrari_rect = carro_ferrari.get_rect(center=(450, 340))
@@ -230,6 +223,7 @@ carro_williams = pygame.image.load('images/carro_williams.png').convert_alpha()
 carro_williams = pygame.transform.rotozoom(carro_williams, 0, 0.6)
 carro_williams_rect = carro_williams.get_rect(center=(450, 320))
 xadrez = pygame.image.load('images/xadrez.png').convert_alpha()
+# nao fiz rect pq vai ser sempre no 0,0
 xadrez = pygame.transform.rotozoom(xadrez, 0, 0.65)
 infos = pygame.image.load('images/icone_informacoes.png').convert_alpha()
 infos = pygame.transform.rotozoom(infos, 0, 0.7)
@@ -244,7 +238,7 @@ icon_relatorio = pygame.image.load('images/icon_envelope.png').convert_alpha()
 icon_relatorio = pygame.transform.rotozoom(icon_relatorio, 0, 0.07)
 icon_relatorio_rect = icon_relatorio.get_rect(center=(800,510))
 
-# jogo
+
 fundo_player1 = pygame.image.load('images/fundo_player1.png')
 fundo_player2 = pygame.image.load('images/fundo_player2.png')
 preparar_player2 = pygame.image.load('images/preparar_jogador2.png').convert_alpha()
@@ -288,37 +282,33 @@ txt_jogar_novamente = pygame.image.load(
 txt_jogar_novamente = pygame.transform.rotozoom(txt_jogar_novamente, 0, 0.7)
 txt_jogar_novamente_rect = txt_jogar_novamente.get_rect(center=(450, 520))
 
-# Texto Input
+
 text_resposta = ''
 
-# Efeito brilhante texto
 opacity = 0
-fade_direction = 1  
+fade_direction = 1 
 fade_speed = 3  
 
-# Fontes
 font = pygame.font.Font("fontes/cronometro.ttf", 40)
 font_contas = pygame.font.Font("fontes/fonte_contas.ttf", 25)
-
-cenarios = 2 
-
-game_mode = mexer = vencedor = partidas = acertos_p1 = erros_p1 = acertos_p2 = erros_p2 = 0 
-tocou_senna = False
-sound = True
 tocar_audios(2)
-clock = pygame.time.Clock()
-arquivo = open("dados_partidas.txt","w")
+sound = True
 
+game_mode = mexer = vencedor = partidas = 0 
+acertos_p1 = erros_p1 = acertos_p2 = erros_p2 = 0
+cenarios = 2 
+clock = pygame.time.Clock()
+contar_caracter = tocou_senna = False
+arquivo = open("dados_partidas.txt","w")
 
 while True:
 
-    # checa todos os eventos
-    for event in pygame.event.get():  
-        if event.type == pygame.QUIT: 
+    for event in pygame.event.get(): 
+        if event.type == pygame.QUIT:  
             pygame.quit() 
             exit()  
 
-        if game_mode == 0:  # tela inicial/final
+        if game_mode == 0: 
             contar_caracter = False 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos() 
@@ -348,7 +338,7 @@ while True:
                 arquivo = open("dados_partidas.txt","w")
                 acertos_p1 = erros_p1 = acertos_p2 = erros_p2 = 0 
 
-        elif game_mode == 1:  # jogo em si
+        elif game_mode == 1: 
 
             if player == 1:
                 if event.type == pygame.KEYDOWN:
@@ -368,8 +358,9 @@ while True:
                             player = 2
                     elif event.key == pygame.K_BACKSPACE:
                         text_resposta = text_resposta[:-1]
-                    else:
+                    elif contar_caracter:
                         text_resposta += event.unicode 
+                    contar_caracter = True
 
             else:
                 if event.type == pygame.KEYDOWN:
@@ -389,11 +380,11 @@ while True:
                             player = 1
                     elif event.key == pygame.K_BACKSPACE:
                         text_resposta = text_resposta[:-1]
-                    else:
+                    elif contar_caracter:
                         text_resposta += event.unicode 
+                    contar_caracter = True
 
-
-        else:  # game mode 2 tela instruções
+        else:  
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if txt_voltar_rect.collidepoint(mouse_pos):
@@ -401,14 +392,13 @@ while True:
                     sound = True
                     game_mode = 0
 
-
-    if game_mode == 0:  # tela final/inicial
+    if game_mode == 0:  
         fundo = pygame.Surface((900, 600))
         fundo.fill((44, 43, 43, 1))
         screen.blit(fundo, (0, 0))
         screen.blit(infos, infos_rect)
 
-        if tocou_senna: # se alguém ganhou
+        if tocou_senna:
             sound = True 
             arquivo.write(f'Partida n°{partidas} | Vencedor = Jogador {vencedor}')
             arquivo.write(f'\n-> Jogador 1: {acertos_p1} acertos | {erros_p1} erros')
@@ -422,7 +412,6 @@ while True:
         else:
             screen.blit(volume_off, volume_rect)
 
-        # mostrar carro vencedor e tela jogar de novo ou tela inicial
         if vencedor == 1:
             screen.blit(carro_ferrari, carro_ferrari_rect)
             screen.blit(xadrez, (0, 0))
@@ -445,7 +434,6 @@ while True:
             screen.blit(infos, infos_rect)
             screen.blit(carro_ferrari, carro_ferrari_rect)
 
-        # atualiza opacidade do texto (efeito brilhante)
         opacity += fade_direction * fade_speed
         if opacity >= 255:  
             opacity = 255
@@ -457,14 +445,13 @@ while True:
         txt_qualquerbotao.set_alpha(opacity)
         txt_jogar_novamente.set_alpha(opacity)
 
-    elif game_mode == 1:  # jogo em si
+    elif game_mode == 1:  
         tempo_atual = pygame.time.get_ticks()
 
-        # cronmetro dos rounds
-        timer_round = 13 - ((tempo_atual - tempo_inicial) / 1000) 
+        timer_round = 13 - ((tempo_atual - tempo_inicial) / 1000)
         timer_surf = font.render(f'{timer_round:.2f}', True, 'White') 
 
-        if timer_round > 10: # 13 a 10.01 segundos que é o tempo de intervalo entre rounds
+        if timer_round > 10: 
             if player == 1: 
                 screen.blit(fundo_player1, (0, 0))
             else: 
@@ -478,8 +465,8 @@ while True:
                 screen.blit(preparar_player1,(0,0))
             else:
                 screen.blit(preparar_player2,(0,0))
-        
-        elif timer_round <= 10 and timer_round >= 0: # 10 segundos de duração do round para resposta
+
+        elif timer_round <= 10 and timer_round >= 0: 
             
             if gerar_conta:
                 equacao, resp = gerar_equacao()
@@ -506,17 +493,18 @@ while True:
             else:
                 screen.blit(txt_surface, (570, 195))
 
-            # cenário se mexendo
+
             screen.blit(cenario, (0 * tam_cenario + mexer, 0))
             screen.blit(cenario, (1 * tam_cenario + mexer, 0))
+
             mexer -= 5
+
             if abs(mexer) > tam_cenario:
                 mexer = 0
 
-            # carros passando pela linha de chegada
-            if carro_vermelho_rect.right > 840:
+            if carro_vermelho_rect.right > 840: 
                 vencedor = 1
-                if not tocou_senna:  # toca áudio so uma vez
+                if not tocou_senna: 
                     tocar_audios(1)
                     tocou_senna = True
                 screen.blit(fundo_player1, (0, 0))
@@ -525,12 +513,12 @@ while True:
                 screen.blit(cenario, (1 * tam_cenario + mexer, 0))
                 screen.blit(chegada, (840, 395))  
                 screen.blit(carro_vermelho, carro_vermelho_rect) 
-                carro_vermelho_rect.left += 3 
-                if carro_vermelho_rect.left > 900:  # quando a traseira do carro passar dos 900px da tela muda o game mode
+                carro_vermelho_rect.left += 3  
+                if carro_vermelho_rect.left > 900:  
                     game_mode = 0
             elif carro_azul_rect.right > 840:
                 vencedor = 2
-                if not tocou_senna: 
+                if not tocou_senna:  
                     tocar_audios(1)
                     tocou_senna = True
                 screen.blit(fundo_player2, (0, 0))
@@ -542,9 +530,9 @@ while True:
                 carro_azul_rect.left += 3
                 if carro_azul_rect.left > 900:
                     game_mode = 0
-        
-        else:  # timer fica negativo quando não tem resposta -> troca o round
-            if vencedor == 0:  # se já tiver vencedor não precisa mais mudar round nem zerar o tempo 
+
+        else:  
+            if vencedor == 0: 
                 tocar_audios(5)
                 text_resposta = ''
                 if player == 1:
@@ -553,10 +541,10 @@ while True:
                     player = 1
                 tempo_inicial = tempo_atual = pygame.time.get_ticks()
                 gerar_conta = True  
-            else: # se zerar tendo algum ganhador é por que está passando a animação do carro ultrapassando a linha de chegada
-                tempo_inicial += 10000 # permanece no elif para terminar animação
+            else:
+                tempo_inicial += 10000 
 
-    else:  # tela instruções
+    else: 
         fundo = pygame.Surface((900, 600))
         fundo.fill((44, 43, 43, 1))
         screen.blit(fundo, (0, 0))
@@ -564,5 +552,5 @@ while True:
         screen.blit(como_jogar,(0,0))
         screen.blit(txt_voltar, txt_voltar_rect)
 
-    pygame.display.update()  # atualiza o display constantemente
-    clock.tick(60) 
+    pygame.display.update() 
+    clock.tick(60)  

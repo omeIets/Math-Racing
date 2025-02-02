@@ -356,7 +356,7 @@ while True:
                         if timer_round <= 10: 
                             if text_resposta == resp: 
                                 acertos_p1 += 1
-                                carro_vermelho_rect.left += 30 + timer_round * 12 
+                                carro_vermelho_rect.left += 30 + timer_round * 20
                                 tocar_audios(4) 
                             else:
                                 erros_p1 += 1
@@ -377,7 +377,7 @@ while True:
                         if timer_round <= 10:
                             if text_resposta == resp:
                                 acertos_p2 += 1
-                                carro_azul_rect.left += 30 + timer_round * 12
+                                carro_azul_rect.left += 30 + timer_round * 20
                                 tocar_audios(4)
                             else:
                                 erros_p2 += 1
