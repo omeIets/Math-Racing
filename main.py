@@ -155,7 +155,7 @@ def gerar_resultado():
         elif operacao1 == 2 and operacao2 == 3:
             resp = num1-(num2*num3)
         elif operacao1 == 2 and operacao2 == 4:
-            resp = num1-(num2/num3)
+            resp = int(num1-(num2/num3))
     # mult
     elif operacao1 == 3:
         if operacao1 == 3 and operacao2 == 1:
@@ -165,17 +165,17 @@ def gerar_resultado():
         elif operacao1 == 3 and operacao2 == 3:
             resp = num1*num2*num3
         elif operacao1 == 3 and operacao2 == 4:
-            resp = num1*(num2/num3)
+            resp = int(num1*(num2/num3))
     # div
     else:
         if operacao1 == 4 and operacao2 == 1:
-            resp = (num1/num2)+num3
+            resp = int((num1/num2)+num3)
         elif operacao1 == 4 and operacao2 == 2:
-            resp = (num1/num2)-num3
+            resp = int((num1/num2)-num3)
         elif operacao1 == 4 and operacao2 == 3:
-            resp = num1/num2*num3
+            resp = int(num1/num2*num3)
         elif operacao1 == 4 and operacao2 == 4:
-            resp = num1/num2/num3
+            resp = int(num1/num2/num3)
 
     # retorna ao número sem a raiz calculada
     if numero_com_raiz == 1:
