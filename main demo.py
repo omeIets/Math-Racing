@@ -319,7 +319,6 @@ while True:
             exit()  
 
         if game_mode == 0:  # tela inicial/final
-            contar_caracter = False 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos() 
                 if infos_rect.collidepoint(mouse_pos):
