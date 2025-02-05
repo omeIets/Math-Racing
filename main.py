@@ -137,44 +137,43 @@ def gerar_resultado():
 
     # soma
     if operacao1 == 1:
-        if operacao1 == 1 and operacao2 == 1:
+        if operacao2 == 1:
             resp = num1+num2+num3
-        elif operacao1 == 1 and operacao2 == 2:
+        elif operacao2 == 2:
             resp = num1+num2-num3
-        elif operacao1 == 1 and operacao2 == 3:
+        elif operacao2 == 3:
             resp = num1+(num2*num3)
-        elif operacao1 == 1 and operacao2 == 4:
+        else:
             resp = int(num1+(num2/num3))
     # sub
     elif operacao1 == 2:
-        if operacao1 == 2 and operacao2 == 1:
-            # tudo soma
+        if operacao2 == 1:
             resp = num1-num2+num3
-        elif operacao1 == 2 and operacao2 == 2:
+        elif operacao2 == 2:
             resp = num1-num2-num3
-        elif operacao1 == 2 and operacao2 == 3:
+        elif operacao2 == 3:
             resp = num1-(num2*num3)
-        elif operacao1 == 2 and operacao2 == 4:
+        else:
             resp = int(num1-(num2/num3))
     # mult
     elif operacao1 == 3:
-        if operacao1 == 3 and operacao2 == 1:
+        if operacao2 == 1:
             resp = (num1*num2)+num3
-        elif operacao1 == 3 and operacao2 == 2:
+        elif operacao2 == 2:
             resp = (num1*num2)-num3
-        elif operacao1 == 3 and operacao2 == 3:
+        elif operacao2 == 3:
             resp = num1*num2*num3
-        elif operacao1 == 3 and operacao2 == 4:
+        else:
             resp = int(num1*(num2/num3))
     # div
     else:
-        if operacao1 == 4 and operacao2 == 1:
+        if operacao2 == 1:
             resp = int((num1/num2)+num3)
-        elif operacao1 == 4 and operacao2 == 2:
+        elif operacao2 == 2:
             resp = int((num1/num2)-num3)
-        elif operacao1 == 4 and operacao2 == 3:
+        elif operacao2 == 3:
             resp = int(num1/num2*num3)
-        elif operacao1 == 4 and operacao2 == 4:
+        else:
             resp = int(num1/num2/num3)
 
     # retorna ao número sem a raiz calculada
