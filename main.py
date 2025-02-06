@@ -3,7 +3,6 @@ import random
 from os import startfile
 from sys import exit
 
-
 def tocar_audios(audio):
     '''
     essa função auxilia no gerenciamento dos diferentes audios do jogo a serem tocados
